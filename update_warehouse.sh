@@ -19,10 +19,8 @@ head -2 $MASTER_LIST  | tr -d '\r' > $MASTER_NEW
 
 # initialize 
 cat /dev/null > $INVENTORY_REPORT
+cat /dev/null > $RUN_HOME/tempfile.all
 cat /dev/null > $RUN_HOME/tempfile
-
-# uncomment to assist with debugging
-# cat /dev/null > $RUN_HOME/tempfile.all
 
 for item in $(awk '{print $1}' $TOTALS_LIST )
 do
@@ -35,14 +33,9 @@ do
     grep "$item," $MASTER_LIST | tr -d '\r' >> $MASTER_NEW 
   else
     echo ITEM=$item >> $INVENTORY_REPORT
-    echo New=$NEW_VALUE >> $INVENTORY_REPORT
-    # echo Old=$OLD_VALUE, New=$NEW_VALUE >> $INVENTORY_REPORT
+    echo Old=$OLD_VALUE, New=$NEW_VALUE >> $INVENTORY_REPORT
     grep "$item," $MASTER_LIST | tr -d '\r' > $RUN_HOME/tempfile 
-    # echo $item >> $RUN_HOME/tempfile.all
-    # echo "sed -i "s/$OLD_VALUE$/$NEW_VALUE/" $RUN_HOME/tempfile " >> $RUN_HOME/tempfile.all
     sed -i "s/$OLD_VALUE$/$NEW_VALUE/" $RUN_HOME/tempfile
-    # echo cat $RUN_HOME/tempfile >> $RUN_HOME/tempfile.all
-    # cat $RUN_HOME/tempfile >> $RUN_HOME/tempfile.all
     cat $RUN_HOME/tempfile >> $MASTER_NEW
   fi
 done
@@ -51,6 +44,7 @@ echo Validate csv file
 echo ensure all items in InventoryTotal exist in the csv file
 MASTER_ROWS=$(wc -l $MASTER_NEW)
 # Include a known total number to check against once we're happy with the csv
+
 echo ensure all items exist in the new list
 BAD_CSV_FLAG="false"
 for i in $(awk '{print $1}' $TOTALS_LIST)
@@ -68,7 +62,7 @@ done
 if [ $BAD_CSV_FLAG == "false" ]; then
   echo Updating the MASTER_LIST with MASTER_NEW since the CSV is good
   echo Backup then Update the MASTER LIST 
-  cp -p $MASTER_LIST $OLD_CSV/$MASTER_LIST.$LONG_DATE.last
+  cp -p $MASTER_LIST $OLD_CSV/EXP_Warehouse.$LONG_DATE.csv
   cp -p $MASTER_NEW $MASTER_LIST
 fi
 
