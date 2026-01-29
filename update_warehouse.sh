@@ -5,8 +5,8 @@ LONG_DATE=$(date +%m%d%H%M)
 HOME=/home/username/ACMECO
 OLD_CSV=$HOME/oldcsv
 RUN_HOME=$HOME/$DATE
-MASTER_LIST=$HOME/EXP_Warehouse.csv
-MASTER_NEW=$RUN_HOME/EXP_Warehouse.$DATE.csv
+MASTER_LIST=$HOME/Warehouse.csv
+MASTER_NEW=$RUN_HOME/Warehouse.$DATE.csv
 mkdir $RUN_HOME/logs
 LOGFILE=$RUN_HOME/logs/update_warehouse_$DATE.log
 TOTALS_LIST=$RUN_HOME/InventoryTotal.txt
@@ -61,7 +61,7 @@ done
 if [ $BAD_CSV_FLAG == "false" ]; then
   echo Updating the MASTER_LIST with MASTER_NEW since the CSV is good
   echo Backup then Update the MASTER LIST 
-  cp -p $MASTER_LIST $OLD_CSV/EXP_Warehouse.$LONG_DATE.csv
+  cp -p $MASTER_LIST $OLD_CSV/Warehouse.$LONG_DATE.csv
   cp -p $MASTER_NEW $MASTER_LIST
 fi
 
