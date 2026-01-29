@@ -4,10 +4,10 @@ HOME=/home/username/ACMECO
 DATE=$(date +%m%d)
 RUN_HOME=$HOME/$DATE
 DOWNLOADS=$HOME/downloads
-MASTER_LIST=$HOME/EXP_Warehouse.csv
+MASTER_LIST=$HOME/Warehouse.csv
 LONG_DATE=$(date +%m%d%H%M)
 ITEMS_LIST=$HOME/items.txt	 # 1299 items in the list
-INVENTORY=$HOME/downloads/$DATE/019210_Inventory.txt
+INVENTORY=$HOME/downloads/$DATE/Inventory.txt
 LOGFILE=$RUN_HOME/logs/get_product_count_$LONG_DATE.log
 INVENTORY_COUNT=$RUN_HOME/InventoryCount_$DATE.txt
 
