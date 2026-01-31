@@ -2,8 +2,6 @@
 
 import os
 from datetime import datetime
-import pandas as pd
-import logging
 
 # Paths and dates
 HOME = "/home/username/ACMECO"
@@ -17,70 +15,49 @@ RUN_HOME = os.path.join(HOME, DATE)
 SKU100 = os.path.join(RUN_HOME, f"SKU100.{DATE}.csv")
 SKU200 = os.path.join(RUN_HOME, f"SKU200.{DATE}.csv")
 
-LOG_DIR = os.path.join(RUN_HOME, "logs")
 LOGFILE = os.path.join(
-    LOG_DIR, f"{os.path.basename(__file__)}.{LONGDATE}.log"
+    RUN_HOME, "logs", f"{os.path.basename(__file__)}.{LONGDATE}.log"
 )
 
-# Ensure directories exist
-os.makedirs(RUN_HOME, exist_ok=True)
-os.makedirs(LOG_DIR, exist_ok=True)
+# Ensure output directories exist
+os.makedirs(os.path.dirname(SKU100), exist_ok=True)
+os.makedirs(os.path.dirname(LOGFILE), exist_ok=True)
 
-# Logging setup
-logging.basicConfig(
-    filename=LOGFILE,
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(message)s"
-)
+# Write CSV headers
+header = "SKU,DESCRIPTION,LIST_PRICE,UNIT_PRICE\n"
+with open(SKU100, "w") as f:
+    f.write(header)
 
-logging.info("Job started (idempotent run)")
+with open(SKU200, "w") as f:
+    f.write(header)
 
-# --- Remove previous outputs for this DATE (idempotency) ---
-for path in (SKU100, SKU200):
-    if os.path.exists(path):
-        os.remove(path)
-        logging.info("Removed existing file: %s", path)
+# Process price file
+with open(PRICES, "r",encoding='latin-1') as infile:
+    for line in infile:
+        line = line.rstrip("\n")
+        fields = line.split("|")
 
-# --- Read input file with auto header detection ---
-df = pd.read_csv(
-    PRICES,
-    sep="|",
-    dtype=str
-)
+        if len(fields) < 8:
+            continue  # skip malformed lines
 
-# Detect header vs no-header
-if all(col.isdigit() for col in df.columns):
-    df = df[[0, 3, 6, 7]]
-    df.columns = ["SKU", "DESCRIPTION", "LIST_PRICE", "UNIT_PRICE"]
-else:
-    df = df.rename(columns=str.upper)
-    df = df[["SKU", "DESCRIPTION", "LIST_PRICE", "UNIT_PRICE"]]
+        SKU = fields[0]
+        DESCRIPTION = fields[3]
+        LIST_PRICE = fields[6]
+        UNIT_PRICE = fields[7]
 
-initial_rows = len(df)
+        if UNIT_PRICE == "UNIT PRICE":
+            continue
 
-# Convert prices
-df["UNIT_PRICE"] = pd.to_numeric(df["UNIT_PRICE"], errors="coerce")
-df = df.dropna(subset=["UNIT_PRICE"])
+        try:
+            unit_price = float(UNIT_PRICE)
+        except ValueError:
+            continue
 
-logging.info(
-    "Dropped %d rows with invalid UNIT_PRICE",
-    initial_rows - len(df)
-)
+        row = f"{SKU},{DESCRIPTION},{LIST_PRICE},{UNIT_PRICE}\n"
 
-# --- Deterministic filtering ---
-df_100 = df[df["UNIT_PRICE"] <= 100].copy()
-df_200 = df[(df["UNIT_PRICE"] >= 101) & (df["UNIT_PRICE"] <= 200)].copy()
-
-# Optional: stable ordering for repeatability
-df_100.sort_values(by=["SKU"], inplace=True)
-df_200.sort_values(by=["SKU"], inplace=True)
-
-# --- Write outputs (overwrite mode) ---
-df_100.to_csv(SKU100, index=False)
-df_200.to_csv(SKU200, index=False)
-
-# --- Logging counts ---
-logging.info("Total input rows: %d", initial_rows)
-logging.info("SKU100 rows written: %d", len(df_100))
-logging.info("SKU200 rows written: %d", len(df_200))
-logging.info("Job completed successfully")
+        if unit_price <= 100:
+            with open(SKU100, "a") as f:
+                f.write(row)
+        elif 101 <= unit_price <= 200:
+            with open(SKU200, "a") as f:
+                f.write(row)
