@@ -47,7 +47,6 @@ with open(ITEMS_LIST, "r") as f:
 
 with open(INVENTORY_COUNT, "a") as out:
     for item in items:
-        # grep item\| Inventory | awk -F\| '{print $8}'
         counts = []
         for line in inventory_lines:
             if f"{item}|" in line:
