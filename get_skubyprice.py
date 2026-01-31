@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 # Paths and dates
-HOME = "/home/mo/ExpressDiesel"
+HOME = "/home/username/ACMECO"
 DATE = datetime.now().strftime("%m%d")
 LONGDATE = datetime.now().strftime("%m%d%H%M")
 
