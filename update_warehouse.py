@@ -19,7 +19,6 @@ LOG_DIR = RUN_HOME / "logs"
 LOGFILE = LOG_DIR / f"update_warehouse_{DATE}.log"
 
 TOTALS_LIST = RUN_HOME / "InventoryTotal.txt"
-TOTALS_SHORT = RUN_HOME / "InventoryTotalShort.txt"   # not used (same as bash)
 INVENTORY_REPORT = RUN_HOME / f"updatewhse-report.{DATE}.txt"
 
 TEMPFILE = RUN_HOME / "tempfile"
