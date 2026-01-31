@@ -9,7 +9,7 @@ DATE = datetime.now().strftime("%m%d")
 LONGDATE = datetime.now().strftime("%m%d%H%M")
 
 DOWNLOADS = os.path.join(HOME, "downloads", DATE)
-PRICES = os.path.join(DOWNLOADS, "019210_Prices.txt")
+PRICES = os.path.join(DOWNLOADS, "Prices.txt")
 RUN_HOME = os.path.join(HOME, DATE)
 
 SKU100 = os.path.join(RUN_HOME, f"SKU100.{DATE}.csv")
