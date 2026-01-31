@@ -12,7 +12,6 @@ LONG_DATE = datetime.now().strftime("%m%d%H%M")
 
 RUN_HOME = HOME / DATE
 DOWNLOADS = HOME / "downloads"
-MASTER_LIST = HOME / "Warehouse.csv"  # not used in original script
 ITEMS_LIST = HOME / "items.txt"        # 1299 items in the list
 INVENTORY = DOWNLOADS / DATE / "Inventory.txt"
 LOGFILE = RUN_HOME / "logs" / f"get_product_count_{LONG_DATE}.log"
