@@ -38,7 +38,7 @@ log(f"Begin product count aggregation {datetime.now()}")
 INVENTORY_COUNT.write_text("")
 
 # Load inventory once
-with open(INVENTORY, "r") as f:
+with open(INVENTORY, "r",encoding='latin-1') as f:
     inventory_lines = f.readlines()
 
 # Process items
