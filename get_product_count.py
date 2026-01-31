@@ -5,8 +5,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-# --- Variables (equivalent to Bash vars) ---
-
+# Variables
 HOME = Path("/home/username/ACMECO")
 DATE = datetime.now().strftime("%m%d")
 LONG_DATE = datetime.now().strftime("%m%d%H%M")
@@ -22,27 +21,24 @@ INVENTORY_COUNT = RUN_HOME / f"InventoryCount_{DATE}.txt"
 INVENTORY_SUM = RUN_HOME / "InventorySum.txt"
 INVENTORY_TOTAL = RUN_HOME / "InventoryTotal.txt"
 
-# --- Create directories (mkdir -p) ---
-
+# Create Directories
 (RUN_HOME / "logs").mkdir(parents=True, exist_ok=True)
 (DOWNLOADS / DATE).mkdir(parents=True, exist_ok=True)
 
-# --- Logging setup (tee-like behavior) ---
-
+# Setup Logging
 def log(message: str):
     timestamped = message.rstrip()
     print(timestamped)
     with open(LOGFILE, "a") as lf:
         lf.write(timestamped + "\n")
 
-# --- Begin processing ---
-
+# Begin processing
 log(f"Begin product count aggregation {datetime.now()}")
 
-# Truncate InventoryCount file (cat /dev/null > file)
+# Truncate InventoryCount file
 INVENTORY_COUNT.write_text("")
 
-# Load inventory once (faster than grepping 1299 times)
+# Load inventory once
 with open(INVENTORY, "r") as f:
     inventory_lines = f.readlines()
 
@@ -63,11 +59,9 @@ with open(INVENTORY_COUNT, "a") as out:
                     except ValueError:
                         pass
 
-        # Match original behavior: print item + all matching $8 values
+        # print item and matching values
         row = item + "    " + " ".join(map(str, counts))
         out.write(row + "\n")
-
-# --- Equivalent of first awk (sum columns 2..NF) ---
 
 with open(INVENTORY_COUNT, "r") as fin, open(INVENTORY_SUM, "w") as fout:
     for line in fin:
@@ -81,8 +75,6 @@ with open(INVENTORY_COUNT, "r") as fin, open(INVENTORY_SUM, "w") as fout:
                 pass
         total = sum(numbers)
         fout.write(line.rstrip() + f" {total}\n")
-
-# --- Equivalent of second awk (print $1, $NF) ---
 
 with open(INVENTORY_SUM, "r") as fin, open(INVENTORY_TOTAL, "w") as fout:
     for line in fin:

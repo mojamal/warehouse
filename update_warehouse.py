@@ -4,8 +4,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-# --- Variables (bash → python) ---
-
+# Variables
 DATE = datetime.now().strftime("%m%d")
 LONG_DATE = datetime.now().strftime("%m%d%H%M")
 
@@ -26,18 +25,16 @@ INVENTORY_REPORT = RUN_HOME / f"updatewhse-report.{DATE}.txt"
 TEMPFILE = RUN_HOME / "tempfile"
 TEMPFILE_ALL = RUN_HOME / "tempfile.all"
 
-# --- Setup directories ---
-
+# Setup Directorie
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
-# --- Logging (tee-like) ---
-
+# Setup Logging
 def log(msg: str):
     print(msg)
     with open(LOGFILE, "a") as lf:
         lf.write(msg + "\n")
 
-# --- Begin processing ---
+# Begin processing 
 
 log(f"Begin updating inventory count for all items {datetime.now()}")
 
@@ -49,20 +46,18 @@ with open(MASTER_LIST, "r") as src, open(MASTER_NEW, "w") as dst:
             break
         dst.write(line.replace("\r", ""))
 
-# Initialize files (cat /dev/null > file)
+# Initialize files
 INVENTORY_REPORT.write_text("")
 TEMPFILE.write_text("")
 TEMPFILE_ALL.write_text("")
 
-# Load files once (much faster than repeated awk/grep)
 master_lines = [line.replace("\r", "") for line in MASTER_LIST.read_text().splitlines()]
 totals_lines = TOTALS_LIST.read_text().splitlines()
 
 # Extract item list from TOTALS_LIST (awk '{print $1}')
 items = [line.split()[0] for line in totals_lines if line.strip()]
 
-# --- Main loop ---
-
+# main loop
 for item in items:
     # OLD_VALUE: last field from matching CSV row
     old_value = None
@@ -105,8 +100,7 @@ for item in items:
                 MASTER_NEW.open("a").write(updated + "\n")
                 break
 
-# --- Validation section ---
-
+# Validate
 log("Validate csv file")
 log("ensure all items in InventoryTotal exist in the csv file")
 
@@ -118,16 +112,14 @@ for item in items:
         log(f"ENTRY {item} is MISSING!! DO NOT USE THIS CSV.")
         BAD_CSV_FLAG = True
 
-# --- Backup & update ---
-
+# Backup CSV then update
 if not BAD_CSV_FLAG:
     log("Updating the MASTER_LIST with MASTER_NEW since the CSV is good")
     log("Backup then Update the MASTER LIST")
     shutil.copy2(MASTER_LIST, OLD_CSV / f"Warehouse.{LONG_DATE}.csv")
     shutil.copy2(MASTER_NEW, MASTER_LIST)
 
-# --- Cleanup ---
-
+# Cleanup
 if TEMPFILE.exists():
     TEMPFILE.unlink()
 
