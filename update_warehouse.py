@@ -53,7 +53,6 @@ TEMPFILE_ALL.write_text("")
 master_lines = [line.replace("\r", "") for line in MASTER_LIST.read_text().splitlines()]
 totals_lines = TOTALS_LIST.read_text().splitlines()
 
-# Extract item list from TOTALS_LIST (awk '{print $1}')
 items = [line.split()[0] for line in totals_lines if line.strip()]
 
 # main loop
