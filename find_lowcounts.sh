@@ -1,5 +1,6 @@
 #! /usr/bin/bash
 
+DATE=$(date +%m%d)
 HOME=/home/username/ACMECO
 RUN_HOME=$HOME/$DATE
 LOGFILE=$RUN_HOME/logs/find_lowcounts_$DATE.log
