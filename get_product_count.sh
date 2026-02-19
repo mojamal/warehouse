@@ -2,16 +2,16 @@
 
 HOME=/home/username/ACMECO
 DATE=$(date +%m%d)
-RUN_HOME=$HOME/$DATE
-DOWNLOADS=$HOME/downloads
-MASTER_LIST=$HOME/Warehouse.csv
 LONG_DATE=$(date +%m%d%H%M)
-ITEMS_LIST=$HOME/items.txt	 # 1299 items in the list
+RUN_HOME=$HOME/$DATE
+LOGFILE=$RUN_HOME/logs/$(basename "$0").$LONG_DATE.log
+MASTER_LIST=$HOME/Warehouse.csv
+ITEMS_LIST=$HOME/items.txt	 
 INVENTORY=$HOME/downloads/$DATE/Inventory.txt
-LOGFILE=$RUN_HOME/logs/get_product_count_$LONG_DATE.log
-INVENTORY_COUNT=$RUN_HOME/InventoryCount_$DATE.txt
+INVENTORY_COUNT=$RUN_HOME/InventoryCount.$DATE.txt
+INVENTORY_SUM=$RUN_HOME/InventorySum.$DATE.txt
+INVENTORY_TOTAL=$RUN_HOME/InventoryTotal.$DATE.txt
 
-mkdir -p $HOME/$DATE/logs $HOME/downloads/$DATE
 {
 echo Begin product count aggregation; date
 cat /dev/null > $INVENTORY_COUNT
@@ -28,9 +28,9 @@ awk '{
     sum+=$i
   };
   print $0, sum
-}' $INVENTORY_COUNT > $HOME/$DATE/InventorySum.txt
+}' $INVENTORY_COUNT > $INVENTORY_SUM
 
-awk '{print $1, $NF}' $HOME/$DATE/InventorySum.txt > $HOME/$DATE/InventoryTotal.txt
+awk '{print $1, $NF}' $INVENTORY_SUM > $INVENTORY_TOTAL
 
 echo End product count aggregation ;date
 
