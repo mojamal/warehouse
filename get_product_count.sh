@@ -14,7 +14,6 @@ INVENTORY_TOTAL=$RUN_HOME/InventoryTotal.$DATE.txt
 
 {
 echo Begin product count aggregation; date
-cat /dev/null > $INVENTORY_COUNT
 
 for item in $(cat $ITEMS_LIST)
 do
