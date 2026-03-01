@@ -8,11 +8,11 @@
 # 1001-2000	1.5
 # 2000+		1.35
 
-HOME=/home/username/ACMECO
+HOME=/home/mo/ExpressDiesel
 DATE=$(date +%m%d)
 LONGDATE=$(date +%m%d%H%M)
 DOWNLOADS=$HOME/downloads/$DATE
-PRICES=$DOWNLOADS/Prices.txt
+PRICES=$DOWNLOADS/019210_Prices.txt
 ITEMS=$HOME/items.txt
 RUN_HOME=$HOME/$DATE
 PRICES_TMP=$RUN_HOME/Prices.tmp.$DATE.csv
