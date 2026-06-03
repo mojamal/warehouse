@@ -1,6 +1,4 @@
-# warehouse
-
-# 💫 About Me:
+# 💫 Warehouse:
 🔭 I’m currently working on 
 Daily and Monthly Inventory and Pricing updates for Shopify and E-Bay storefronts.
 Scheduled to run daily for Inventory and Monthly for Pricing updates.
