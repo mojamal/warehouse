@@ -1,0 +1,2 @@
+07 7 * * * /home/mo/ExpressDiesel/do_diesel.sh
+37 7 1 * * /home/mo/ExpressDiesel/do_monthly.sh
