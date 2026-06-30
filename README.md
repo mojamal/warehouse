@@ -10,23 +10,31 @@ The inventory total sum from six warehouses is updated and new spreadsheets crea
 37 7 1 * * /home/ACMECO/do_monthly.sh
 
 # File Structure
-/home/ACMECO
-ebayitems.txt       # list of ebay SKUs
-items.txt           # list of SKUs
-- downloads/$DATE   # the latest Price and Inventory lists
-- $DATE/logs        # Execution output and logs
-- oldcsv            # Old *.csv file backups
+- /home/ACMECO
+- ebayitems.txt       # list of ebay SKUs
+- items.txt           # list of SKUs
+- downloads/$DATE     # the latest Price and Inventory lists
+- $DATE/logs          # Execution output and logs
+- oldcsv              # Old *.csv file backups
 
 # Do Diesel (Daily)
 HOME=/home/ACMECO
+
 DATE=$(date +%m%d)
+
 $HOME/scp_files.sh
+
 $HOME/get_product_count.py
+
 $HOME/get_ebay_count.py
+
 $HOME/update_warehouse.py
+
 $HOME/update_ebay.py
+
 $HOME/find_lowcounts.sh > $HOME/$DATE/lowcounts.$DATE.txt
 
 # Do Prices (Monthly)
 $HOME/get_listandunitprice.sh
+
 $HOME/get_listandunitprice_ebay.sh
