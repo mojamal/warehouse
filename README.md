@@ -35,6 +35,8 @@ $HOME/update_ebay.py
 $HOME/find_lowcounts.sh > $HOME/$DATE/lowcounts.$DATE.txt
 
 # Do Prices (Monthly)
+$HOME/get_skubyprice.py
+
 $HOME/get_listandunitprice.sh
 
 $HOME/get_listandunitprice_ebay.sh
